@@ -6,7 +6,7 @@ import (
 	"syscall/js"
 )
 
-func AttachRouter(r *Router) {
+func AttachRouter(r *Router, SSR bool) {
 	window := js.Global().Get("window")
 	js.Global().Set("g_rf_onpopstate", js.FuncOf(rf(r)))
 	window.Set("onpopstate", js.Global().Get("g_rf_onpopstate"))
@@ -14,7 +14,9 @@ func AttachRouter(r *Router) {
 		Link("", args[0].String())
 		return js.Undefined()
 	}))
-	js.Global().Call("g_rf_onpopstate")
+	if !SSR {
+		js.Global().Call("g_rf_onpopstate")
+	}
 }
 
 func Link(title, path string) {

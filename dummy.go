@@ -2,8 +2,10 @@
 
 package wasmrouter
 
-func AttachRouter(r *Router) {
-	r.run()
+func AttachRouter(r *Router, SSR bool) {
+	if SSR {
+		r.run()
+	}
 }
 
 func Link(title, path string) {
