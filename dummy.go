@@ -3,12 +3,9 @@
 package wasmrouter
 
 func AttachRouter(r *Router) {
+	r.run()
 }
 
-func (r *Router) Full(path string, h RouterHandler) {
-
-}
-
-func (r *Router) After(path string, h RouterHandler) {
-
+func Link(title, path string) {
+	
 }
