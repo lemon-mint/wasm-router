@@ -12,6 +12,15 @@ func AttachRouter(r *Router) {
 	js.Global().Set("g_rf_onpopstate", js.FuncOf(rf(r)))
 	window.Set("onpopstate", js.Global().Get("g_rf_onpopstate"))
 	js.Global().Call("g_rf_onpopstate")
+	js.Global().Set("g_link", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		Link("", args[0].String())
+		return js.Undefined()
+	}))
+}
+
+func Link(title, path string) {
+	js.Global().Get("window").Get("history").Call("pushState", js.Undefined(), title, "/"+path)
+	js.Global().Call("g_rf_onpopstate")
 }
 
 func rf(r *Router) func(this js.Value, args []js.Value) interface{} {
