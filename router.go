@@ -4,6 +4,7 @@ package wasmrouter
 
 import (
 	"log"
+	"net/url"
 	"syscall/js"
 )
 
@@ -52,6 +53,22 @@ func onClick(this js.Value, args []js.Value) interface{} {
 				href := target.Get("href")
 				if !href.IsUndefined() {
 					log.Println("Link Click:", href.String())
+					location := js.Global().Get("window").Get("location").Get("href").String()
+					locationURL, err := url.Parse(location)
+					if err != nil {
+						log.Println("location:", err)
+						return js.Undefined()
+					}
+					linkURL, err := url.Parse(href.String())
+					if err != nil {
+						log.Println("link Error:", err)
+						return js.Undefined()
+					}
+					if linkURL.Host == locationURL.Host {
+						e.Call("preventDefault")
+						Link("Link", href.String())
+						log.Println("Link: preventDefault")
+					}
 				}
 			}
 		}
