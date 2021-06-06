@@ -3,6 +3,7 @@
 package wasmrouter
 
 import (
+	"log"
 	"syscall/js"
 )
 
@@ -17,6 +18,7 @@ func AttachRouter(r *Router, SSR bool) {
 	if !SSR {
 		js.Global().Call("g_rf_onpopstate")
 	}
+	window.Call("addEventListener", "click", js.FuncOf(onClick))
 }
 
 func Link(title, path string) {
@@ -38,4 +40,21 @@ func (r *Router) getPath() string {
 	location := js.Global().Get("window").Get("location")
 	pathname := location.Get("pathname").String()
 	return pathname
+}
+
+func onClick(this js.Value, args []js.Value) interface{} {
+	e := args[0]
+	target := e.Get("target")
+	if !target.IsUndefined() {
+		name := target.Get("tagName")
+		if !name.IsUndefined() {
+			if name.String() == "A" {
+				href := target.Get("href")
+				if !href.IsUndefined() {
+					log.Println("Link Click:", href.String())
+				}
+			}
+		}
+	}
+	return js.Undefined()
 }
