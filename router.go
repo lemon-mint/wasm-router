@@ -45,6 +45,11 @@ func (r *Router) getPath() string {
 
 func onClick(this js.Value, args []js.Value) interface{} {
 	e := args[0]
+	ctrlKey := e.Get("ctrlKey")
+	if ctrlKey.IsUndefined() || ctrlKey.Bool() {
+		return js.Undefined()
+	}
+
 	target := e.Get("target")
 	if !target.IsUndefined() {
 		name := target.Get("tagName")
