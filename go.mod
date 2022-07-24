@@ -1,3 +1,3 @@
 module github.com/lemon-mint/wasm-router
 
-go 1.16
+go 1.18
